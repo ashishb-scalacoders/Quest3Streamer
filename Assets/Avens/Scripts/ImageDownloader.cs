@@ -16,6 +16,11 @@ public class ImageDownloader : MonoBehaviour
     public RawImage rawImage;
     public Image pointerImg;
 
+    public Vector3 pointerPos;
+    public GameObject pointerPrefab;
+    public GameObject canvas;
+
+    public int delay = 10;
 
     // public Camera centerCamera;
     // public GameObject pointer;
@@ -72,10 +77,24 @@ public class ImageDownloader : MonoBehaviour
         // strX = "{" + strX.Remove(0, 8) + "}";
         // strX = strX.Remove(0, 18);
 
+        float threshhold_Width = 6000.0f;
+        float threshhold_Height = 7600.0f;
+
         imageData = JsonUtility.FromJson<ImageData>(jsonData);
 
         rawImage.texture = await DownloadImage(imageData.imageUrl); // Download the image from URL
-        rawImage.rectTransform.sizeDelta = new Vector2(imageData.width, imageData.height);
+
+        if (imageData.width >= imageData.height)
+        {
+            float multiplier = threshhold_Width / imageData.width;
+
+            rawImage.rectTransform.sizeDelta = new Vector2(imageData.width * multiplier, imageData.height * multiplier);
+        } else
+        {
+            float multiplier = threshhold_Height / imageData.height;
+
+            rawImage.rectTransform.sizeDelta = new Vector2(imageData.width * multiplier, imageData.height * multiplier);
+        }
 
         // async void DownloadImageX()
         // {
@@ -96,6 +115,25 @@ public class ImageDownloader : MonoBehaviour
     {
         pointerImg.enabled = false;
     }
+
+    void CreateAndDestroyPointer(Vector3 position)
+    {
+        GameObject newPointer = Instantiate(pointerPrefab);
+        
+        newPointer.transform.SetParent(canvas.transform, false); // Set parent to this object's transform, false keeps local orientation etc.
+
+        newPointer.GetComponent<RectTransform>().localPosition = position;
+        newPointer.SetActive(true);
+
+        StartCoroutine(DestroyPointerAfterDelay(newPointer, delay));
+    }
+
+    IEnumerator DestroyPointerAfterDelay(GameObject pointer, int delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(pointer);
+    }
+
     public void MovePointer(string str)
     {
         CancelInvoke("HidePointer");
@@ -108,11 +146,18 @@ public class ImageDownloader : MonoBehaviour
 
         pointerCoordinate = JsonUtility.FromJson<PointerData>(jsonData);
 
+        // Debug.LogError(pointerCoordinate.y);
+        // Debug.LogError(pointerCoordinate.x);
+
         // rawImage.texture = await DownloadImage(imageData.imageUrl); // Download the image from URL
         // 2064x2208
-        pointerImg.rectTransform.localPosition = new Vector3(map(pointerCoordinate.x, 0, 640, -1032, 1032), -map(pointerCoordinate.y - 480, -480, 00, -1104, 1104), 50);
-        pointerImg.enabled = true;
-        Invoke("HidePointer", 10);
+        // pointerImg.rectTransform.localPosition = new Vector3(map(pointerCoordinate.x, 0, 640, -1032, 1032), -map(pointerCoordinate.y - 480, -480, 00, -1104, 1104), 50);
+        // pointerImg.rectTransform.localPosition = new Vector3(map(pointerCoordinate.x, 0, 640, -0.96f, 0.96f), -map(pointerCoordinate.y - 480, -480, 0, -0.54f, 0.54f), 0);
+        pointerPos = new Vector3(map(pointerCoordinate.x, 0, 640, -0.96f, 0.96f), -map(pointerCoordinate.y - 480, -480, 0, -0.54f, 0.54f), 0);
+
+        CreateAndDestroyPointer(pointerPos);
+        // pointerImg.enabled = true;
+        // Invoke("HidePointer", 10);
         // async void DownloadImageX()
         // {
         //     // Set up the image size according to uploaded image dimentions

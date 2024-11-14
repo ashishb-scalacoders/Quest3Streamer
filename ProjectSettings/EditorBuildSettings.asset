@@ -9,8 +9,17 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Avens/Main.unity
+    path: Assets/Avens/User Manager.unity
+    guid: 88dc8ccd561f2f649810d58df7db7be1
+  - enabled: 1
+    path: Assets/Avens/Maintenance Session.unity
     guid: c36baae196f884383b3f390157792d73
+  - enabled: 0
+    path: Assets/Avens/Maintenance Session For Video.unity
+    guid: 76b38d36b49f89141ac4fe4ddedfd0d2
+  - enabled: 0
+    path: Assets/Avens/Maintenance Session Wide.unity
+    guid: 56638e33e998e2740b4977344ea79e20
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 7d559fbe2d41e4d8b85bf1153f755a51, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 0e2bed39d89b64e0396bd57fd3ca1225, type: 2}
