@@ -153,7 +153,9 @@ public class ImageDownloader : MonoBehaviour
         // 2064x2208
         // pointerImg.rectTransform.localPosition = new Vector3(map(pointerCoordinate.x, 0, 640, -1032, 1032), -map(pointerCoordinate.y - 480, -480, 00, -1104, 1104), 50);
         // pointerImg.rectTransform.localPosition = new Vector3(map(pointerCoordinate.x, 0, 640, -0.96f, 0.96f), -map(pointerCoordinate.y - 480, -480, 0, -0.54f, 0.54f), 0);
-        pointerPos = new Vector3(map(pointerCoordinate.x, 0, 640, -0.96f, 0.96f), -map(pointerCoordinate.y - 480, -480, 0, -0.54f, 0.54f), 0);
+        pointerPos = new Vector3(map(pointerCoordinate.x, 0, 640, -880f, 880f), -map(pointerCoordinate.y - 360, -360, 0, -540f + 54f, 540f + 54f), 0);
+
+        pointerPos = new Vector3(pointerPos.x, pointerPos.y - 54f, pointerPos.z);
 
         CreateAndDestroyPointer(pointerPos);
         // pointerImg.enabled = true;
